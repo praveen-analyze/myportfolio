@@ -1,8 +1,8 @@
 const nodemailer = require('nodemailer');
 
 // Sends an email notification when a new lead comes in.
-// Silently does nothing if EMAIL_USER / EMAIL_PASS aren't set in .env —
-// this keeps the contact form working even before email is configured.
+// This now trims and normalizes credentials so Gmail app passwords typed with spaces
+// do not break the SMTP connection.
 const sendLeadNotification = async (contact) => {
   const emailUser = process.env.EMAIL_USER?.trim();
   const emailPass = process.env.EMAIL_PASS?.replace(/\s+/g, '');
@@ -16,26 +16,38 @@ const sendLeadNotification = async (contact) => {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: { user: emailUser, pass: emailPass },
+    debug: true,
+    logger: true,
   });
 
-  const html = `
-    <h2>New lead from Praveen Studio website</h2>
-    <p><strong>Name:</strong> ${contact.name}</p>
-    <p><strong>Phone:</strong> ${contact.phone}</p>
-    <p><strong>Email:</strong> ${contact.email || '-'}</p>
-    <p><strong>Business:</strong> ${contact.business || '-'}</p>
-    <p><strong>Project type:</strong> ${contact.projectType}</p>
-    <p><strong>Budget:</strong> ${contact.budget || '-'}</p>
-    <p><strong>Timeline:</strong> ${contact.timeline || '-'}</p>
-    <p><strong>Description:</strong><br/>${contact.description}</p>
-  `;
+  try {
+    await transporter.verify();
 
-  await transporter.sendMail({
-    from: `"Praveen Studio Website" <${emailUser}>`,
-    to: notifyEmail,
-    subject: `New lead: ${contact.name} (${contact.projectType})`,
-    html,
-  });
+    const html = `
+      <h2>New lead from Praveen Studio website</h2>
+      <p><strong>Name:</strong> ${contact.name}</p>
+      <p><strong>Phone:</strong> ${contact.phone}</p>
+      <p><strong>Email:</strong> ${contact.email || '-'}</p>
+      <p><strong>Business:</strong> ${contact.business || '-'}</p>
+      <p><strong>Project type:</strong> ${contact.projectType}</p>
+      <p><strong>Budget:</strong> ${contact.budget || '-'}</p>
+      <p><strong>Timeline:</strong> ${contact.timeline || '-'}</p>
+      <p><strong>Description:</strong><br/>${contact.description}</p>
+    `;
+
+    await transporter.sendMail({
+      from: `"Praveen Studio Website" <${emailUser}>`,
+      to: notifyEmail,
+      subject: `New lead: ${contact.name} (${contact.projectType})`,
+      html,
+    });
+
+    console.log('Lead email sent successfully to', notifyEmail);
+  } catch (error) {
+    console.error('Email notification failed:', error.message);
+    console.error(error.stack);
+    throw error;
+  }
 };
 
 module.exports = { sendLeadNotification };

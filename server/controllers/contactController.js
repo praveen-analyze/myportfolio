@@ -16,6 +16,7 @@ const createContact = async (req, res, next) => {
       await sendLeadNotification(contact);
     } catch (emailErr) {
       console.error('Email notify failed:', emailErr.message);
+      console.error(emailErr.stack);
     }
 
     res.status(201).json({
