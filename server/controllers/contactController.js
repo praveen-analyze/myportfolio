@@ -12,8 +12,11 @@ const createContact = async (req, res, next) => {
 
     const contact = await Contact.create(req.body);
 
-    // Fire-and-forget — never block the form response on email sending
-    sendLeadNotification(contact).catch((e) => console.error('Email notify failed:', e.message));
+    try {
+      await sendLeadNotification(contact);
+    } catch (emailErr) {
+      console.error('Email notify failed:', emailErr.message);
+    }
 
     res.status(201).json({
       success: true,

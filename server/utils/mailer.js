@@ -4,13 +4,18 @@ const nodemailer = require('nodemailer');
 // Silently does nothing if EMAIL_USER / EMAIL_PASS aren't set in .env —
 // this keeps the contact form working even before email is configured.
 const sendLeadNotification = async (contact) => {
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+  const emailUser = process.env.EMAIL_USER?.trim();
+  const emailPass = process.env.EMAIL_PASS?.replace(/\s+/g, '');
+  const notifyEmail = process.env.NOTIFY_EMAIL?.trim() || emailUser;
+
+  if (!emailUser || !emailPass) {
+    console.warn('Email notification skipped: EMAIL_USER or EMAIL_PASS is missing.');
     return;
   }
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
-    auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
+    auth: { user: emailUser, pass: emailPass },
   });
 
   const html = `
@@ -26,8 +31,8 @@ const sendLeadNotification = async (contact) => {
   `;
 
   await transporter.sendMail({
-    from: `"Praveen Studio Website" <${process.env.EMAIL_USER}>`,
-    to: process.env.NOTIFY_EMAIL || process.env.EMAIL_USER,
+    from: `"Praveen Studio Website" <${emailUser}>`,
+    to: notifyEmail,
     subject: `New lead: ${contact.name} (${contact.projectType})`,
     html,
   });
