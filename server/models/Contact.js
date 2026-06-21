@@ -13,7 +13,7 @@ const contactSchema = new mongoose.Schema(
     },
     budget: {
       type: String,
-      enum: ['Under ₹2,000', '₹2,000–₹5,000', '₹5,000–₹10,000', '₹10,000–₹20,000', '₹20,000+', ''],
+      trim: true,
       default: '',
     },
     timeline: { type: String, trim: true, default: '' },
