@@ -173,7 +173,7 @@ export default function Home() {
             </div>
             <div className="about-stats">
               <div className="about-stat">
-                <div className="about-stat-val">3+</div>
+                <div className="about-stat-val">10+</div>
                 <div className="about-stat-lbl">Projects</div>
               </div>
               <div className="about-stat">
@@ -194,7 +194,7 @@ export default function Home() {
         <h2 className="cta-banner-h">Ready to go online?</h2>
         <p className="cta-banner-p">Your website could be live in 7 days. Let's start today.</p>
         <div className="cta-banner-actions">
-          <Link className="btn btn-white btn-lg" to="/contact">Get a Free Quote →</Link>
+          <Link className="btn btn-white btn-lg" to="/contact">Get a Free Appointment →</Link>
           <Link
             className="btn btn-lg"
             style={{
