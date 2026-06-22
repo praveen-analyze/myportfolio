@@ -11,18 +11,26 @@ const sendLeadNotification = async (contact) => {
     return;
   }
 
+  console.log('Attempting lead email send', {
+    notifyEmail,
+    sender: emailUser,
+    clientEmail: clientEmail || null,
+    projectType: contact.projectType,
+  });
+
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
     auth: { user: emailUser, pass: emailPass },
-    pool: true,
-    maxConnections: 1,
-    maxMessages: 5,
-    connectionTimeout: 15000,
-    greetingTimeout: 15000,
-    socketTimeout: 20000,
+    connectionTimeout: 20000,
+    greetingTimeout: 20000,
+    socketTimeout: 30000,
   });
 
   try {
+    await transporter.verify();
+
     const ownerHtml = `
       <h2>New lead from Praveen Studio website</h2>
       <p><strong>Name:</strong> ${contact.name}</p>
@@ -66,8 +74,13 @@ const sendLeadNotification = async (contact) => {
 
     console.log('Lead email sent successfully to', notifyEmail, clientEmail ? `and ${clientEmail}` : '');
   } catch (error) {
-    console.error('Email notification failed:', error.message);
-    console.error(error.stack);
+    console.error('Email notification failed. Details:', {
+      message: error.message,
+      code: error.code,
+      response: error.response,
+      responseCode: error.responseCode,
+      stack: error.stack,
+    });
     throw error;
   }
 };
