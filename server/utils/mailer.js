@@ -20,12 +20,17 @@ const sendLeadNotification = async (contact) => {
 
   const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
+    port: 587,
+    secure: false,
     auth: { user: emailUser, pass: emailPass },
-    connectionTimeout: 20000,
-    greetingTimeout: 20000,
-    socketTimeout: 30000,
+    requireTLS: true,
+    connectionTimeout: 30000,
+    greetingTimeout: 30000,
+    socketTimeout: 45000,
+    tls: {
+      rejectUnauthorized: false,
+      minVersion: 'TLSv1.2',
+    },
   });
 
   try {
