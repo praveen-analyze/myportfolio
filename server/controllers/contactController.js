@@ -12,17 +12,15 @@ const createContact = async (req, res, next) => {
 
     const contact = await Contact.create(req.body);
 
-    try {
-      await sendLeadNotification(contact);
-    } catch (emailErr) {
-      console.error('Email notify failed:', emailErr.message);
-      console.error(emailErr.stack);
-    }
-
     res.status(201).json({
       success: true,
       message: 'Thanks! Your request has been received. We will reply within 24 hours.',
       data: contact,
+    });
+
+    void sendLeadNotification(contact).catch((emailErr) => {
+      console.error('Email notify failed:', emailErr.message);
+      console.error(emailErr.stack);
     });
   } catch (err) {
     next(err);
