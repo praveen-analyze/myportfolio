@@ -159,7 +159,7 @@ export default function Home() {
           </div>
           <div className="about-name-card">
             <div className="about-avatar">PK</div>
-            <div className="about-card-name">Praveen Kumar E</div>
+            <div className="about-card-name">Praveen Kumar </div>
             <div className="about-card-role">Full Stack Developer · Chennai</div>
             <div className="skill-chips">
               <span className="skill-chip">React.js</span>
