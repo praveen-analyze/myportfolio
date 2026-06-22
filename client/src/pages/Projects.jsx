@@ -14,6 +14,7 @@ const FALLBACK_PROJECTS = [
     icon: '🗺️',
     gradientFrom: '#1e3a5f',
     gradientTo: '#2563EB',
+    liveUrl: 'https://pprs-6.onrender.com/',
   },
   {
     _id: 'fallback-2',
@@ -25,29 +26,34 @@ const FALLBACK_PROJECTS = [
     icon: '🍕',
     gradientFrom: '#7c2d12',
     gradientTo: '#ea580c',
+    liveUrl: 'https://pizza-itf6.vercel.app/',
   },
   {
-    _id: 'fallback-3',
-    title: 'Bulk Email Application',
-    categories: ['webapp', 'fullstack'],
-    categoryLabel: 'Web App · SaaS Tool',
-    description: 'MERN bulk email platform with per-recipient delivery tracking, Tiptap rich editor, and campaign history.',
-    tags: ['React', 'Nodemailer', 'JWT', 'Tiptap', 'MongoDB'],
-    icon: '✉️',
-    gradientFrom: '#1a2e1a',
-    gradientTo: '#16a34a',
-  },
-  {
-    _id: 'fallback-4',
-    title: 'Sample: Boutique Store',
-    categories: ['ecommerce'],
-    categoryLabel: 'E-commerce · Retail',
-    description: 'Demo e-commerce site for a clothing boutique — product gallery, size selector, WhatsApp order flow.',
-    tags: ['React', 'Tailwind', 'WhatsApp API'],
-    icon: '🛍️',
-    gradientFrom: '#312e81',
-    gradientTo: '#7c3aed',
-  },
+  _id: 'fallback-4',
+  title: 'Nostra E-Commerce Website',
+  categories: ['frontend', 'website'],
+  categoryLabel: 'Frontend · E-Commerce',
+  description: 'Responsive multi-page e-commerce website featuring real-time product search, dynamic filtering, and a modern user-friendly interface.',
+  tags: ['HTML5', 'CSS3', 'JavaScript', 'Responsive Design'],
+  icon: '🛍️',
+  gradientFrom: '#1e3a8a',
+  gradientTo: '#3b82f6',
+  liveUrl: 'https://lnkd.in/g5a5WHqW',
+},
+
+{
+  _id: 'fallback-5',
+  title: 'Greenden Plant Store',
+  categories: ['frontend', 'website'],
+  categoryLabel: 'Frontend · Responsive Website',
+  description: 'Responsive multi-page plant store website built with Tailwind CSS, featuring modern UI design, mobile-first layouts, and scalable components.',
+  tags: ['HTML5', 'Tailwind CSS', 'JavaScript', 'Responsive Design'],
+  icon: '🌿',
+  gradientFrom: '#14532d',
+  gradientTo: '#22c55e',
+  liveUrl: 'https://lnkd.in/gBa2iwJt',
+},
+
   {
     _id: 'fallback-5',
     title: 'Sample: Clinic Website',
@@ -58,17 +64,20 @@ const FALLBACK_PROJECTS = [
     icon: '🏥',
     gradientFrom: '#0c4a6e',
     gradientTo: '#0284c7',
+    liveUrl: 'https://praveen-analyze.github.io/medidesk/',
   },
+
   {
-    _id: 'fallback-6',
-    title: 'Sample: Restaurant Landing',
+    _id: 'fallback-10',
+    title: 'Portfolio & Blog CMS',
     categories: ['webapp'],
-    categoryLabel: 'Business Website · F&B',
-    description: 'Demo landing page for a restaurant — menu display, location, reservation call-to-action.',
-    tags: ['HTML', 'CSS', 'JavaScript'],
-    icon: '☕',
-    gradientFrom: '#1c1917',
-    gradientTo: '#78350f',
+    categoryLabel: 'Web App · Personal Branding',
+    description: 'Dynamic portfolio with admin panel, markdown blog editor, SEO optimization, and analytics dashboard.',
+    tags: ['React', 'Express', 'MongoDB', 'Markdown', 'Vercel'],
+    icon: '📝',
+    gradientFrom: '#1e1b4b',
+    gradientTo: '#6366f1',
+    liveUrl: 'https://myportfolio-aj7g.vercel.app/projects',
   },
 ];
 
@@ -135,27 +144,48 @@ export default function Projects() {
         </div>
 
         <div className="projects-grid">
-          {visibleProjects.map((p) => (
-            <div className="proj-card" key={p._id}>
-              <div
-                className="proj-thumb"
-                style={{ background: `linear-gradient(135deg, ${p.gradientFrom}, ${p.gradientTo})` }}
-              >
-                <span>{p.icon}</span>
-                <div className="proj-thumb-overlay"><span className="proj-view-btn">View Project</span></div>
-              </div>
-              <div className="proj-body">
-                <div className="proj-cat">{p.categoryLabel}</div>
-                <div className="proj-title">{p.title}</div>
-                <div className="proj-desc">{p.description}</div>
-                <div className="proj-tags">
-                  {p.tags.map((t) => (
-                    <span className="proj-tag" key={t}>{t}</span>
-                  ))}
+          {visibleProjects.map((p) => {
+            const projectUrl = p.liveUrl || p.githubUrl || p.url || p.link;
+
+            return (
+              <div className="proj-card" key={p._id}>
+                {projectUrl ? (
+                  <a
+                    href={projectUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="proj-thumb"
+                    style={{ background: `linear-gradient(135deg, ${p.gradientFrom}, ${p.gradientTo})` }}
+                  >
+                    <span>{p.icon}</span>
+                    <div className="proj-thumb-overlay">
+                      <span className="proj-view-btn">View Project</span>
+                    </div>
+                  </a>
+                ) : (
+                  <div
+                    className="proj-thumb"
+                    style={{ background: `linear-gradient(135deg, ${p.gradientFrom}, ${p.gradientTo})` }}
+                  >
+                    <span>{p.icon}</span>
+                    <div className="proj-thumb-overlay">
+                      <span className="proj-view-btn">View Project</span>
+                    </div>
+                  </div>
+                )}
+                <div className="proj-body">
+                  <div className="proj-cat">{p.categoryLabel}</div>
+                  <div className="proj-title">{p.title}</div>
+                  <div className="proj-desc">{p.description}</div>
+                  <div className="proj-tags">
+                    {(p.tags || []).map((t) => (
+                      <span className="proj-tag" key={t}>{t}</span>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {loading && (

@@ -10,6 +10,8 @@ const projectSchema = new mongoose.Schema(
     icon: { type: String, default: '💻' },
     gradientFrom: { type: String, default: '#1e3a5f' },
     gradientTo: { type: String, default: '#2563EB' },
+    liveUrl: { type: String, trim: true, default: '' },
+    githubUrl: { type: String, trim: true, default: '' },
     order: { type: Number, default: 0 },
   },
   { timestamps: true }
