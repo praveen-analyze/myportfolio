@@ -1,11 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getProjects } from '../api/api.js';
 
-// Fallback projects shown when backend is unavailable
-const FALLBACK_PROJECTS = [
+const PROJECTS = [
   {
-    _id: 'fallback-1',
+    _id: 'project-1',
     title: 'Smart Public Issue Reporting',
     categories: ['webapp', 'fullstack'],
     categoryLabel: 'Web App · Civic Tech',
@@ -18,7 +16,7 @@ const FALLBACK_PROJECTS = [
     liveUrl: 'https://pprs-6.onrender.com/',
   },
   {
-    _id: 'fallback-2',
+    _id: 'project-2',
     title: 'Pizza Palace — Food Ordering',
     categories: ['ecommerce', 'fullstack'],
     categoryLabel: 'E-commerce · Full Stack',
@@ -31,12 +29,12 @@ const FALLBACK_PROJECTS = [
     liveUrl: 'https://pizza-itf6.vercel.app/',
   },
   {
-    _id: 'fallback-3',
+    _id: 'project-3',
     title: 'Nostra E-Commerce Website',
     categories: ['frontend', 'ecommerce'],
     categoryLabel: 'Frontend · E-commerce',
     description:
-      'Responsive e-commerce website with real-time product search, filtering, and a clean user-friendly interface.',
+      'Responsive e-commerce website featuring real-time product search, dynamic filtering, and a modern user-friendly interface.',
     tags: ['HTML5', 'CSS3', 'JavaScript', 'Responsive Design'],
     icon: '🛍️',
     gradientFrom: '#1e3a8a',
@@ -44,7 +42,7 @@ const FALLBACK_PROJECTS = [
     liveUrl: 'https://praveen-analyze.github.io/nostra/',
   },
   {
-    _id: 'fallback-4',
+    _id: 'project-4',
     title: 'Greenden Plant Store',
     categories: ['frontend'],
     categoryLabel: 'Frontend · Responsive Website',
@@ -57,7 +55,7 @@ const FALLBACK_PROJECTS = [
     liveUrl: 'https://praveen-analyze.github.io/Greenden-tailwind/',
   },
   {
-    _id: 'fallback-5',
+    _id: 'project-5',
     title: 'MediDesk Clinic Website',
     categories: ['frontend', 'webapp'],
     categoryLabel: 'Web App · Healthcare',
@@ -70,7 +68,7 @@ const FALLBACK_PROJECTS = [
     liveUrl: 'https://praveen-analyze.github.io/medidesk/',
   },
   {
-    _id: 'fallback-6',
+    _id: 'project-6',
     title: 'Portfolio & Blog CMS',
     categories: ['webapp', 'fullstack'],
     categoryLabel: 'Web App · Personal Branding',
@@ -93,43 +91,12 @@ const FILTERS = [
 ];
 
 export default function Projects() {
-  const [projects, setProjects] = useState(FALLBACK_PROJECTS);
   const [activeFilter, setActiveFilter] = useState('all');
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const fetchProjects = async () => {
-      setLoading(true);
-
-      try {
-        const res = await getProjects(activeFilter);
-
-        if (!cancelled && res?.data?.data?.length) {
-          setProjects(res.data.data);
-        }
-      } catch (error) {
-        console.error('Error loading projects:', error.message);
-        setProjects(FALLBACK_PROJECTS);
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      }
-    };
-
-    fetchProjects();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [activeFilter]);
 
   const visibleProjects =
     activeFilter === 'all'
-      ? projects
-      : projects.filter((project) =>
+      ? PROJECTS
+      : PROJECTS.filter((project) =>
           project.categories.includes(activeFilter)
         );
 
@@ -143,9 +110,7 @@ export default function Projects() {
           Portfolio
         </span>
 
-        <h2 className="section-title">
-          Projects I've built
-        </h2>
+        <h2 className="section-title">Projects I've built</h2>
 
         <p
           className="section-sub"
@@ -156,7 +121,6 @@ export default function Projects() {
       </div>
 
       <section className="section">
-
         <div className="filter-bar">
           {FILTERS.map((filter) => (
             <button
@@ -172,74 +136,50 @@ export default function Projects() {
         </div>
 
         <div className="projects-grid">
-          {visibleProjects.map((project) => {
-            const url =
-              project.liveUrl ||
-              project.githubUrl ||
-              project.url ||
-              project.link;
+          {visibleProjects.map((project) => (
+            <div className="proj-card" key={project._id}>
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="proj-thumb"
+                style={{
+                  background: `linear-gradient(135deg, ${project.gradientFrom}, ${project.gradientTo})`,
+                }}
+              >
+                <span>{project.icon}</span>
 
-            return (
-              <div className="proj-card" key={project._id}>
-                <a
-                  href={url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="proj-thumb"
-                  style={{
-                    background: `linear-gradient(135deg, ${project.gradientFrom}, ${project.gradientTo})`,
-                  }}
-                >
-                  <span>{project.icon}</span>
+                <div className="proj-thumb-overlay">
+                  <span className="proj-view-btn">
+                    View Project
+                  </span>
+                </div>
+              </a>
 
-                  <div className="proj-thumb-overlay">
-                    <span className="proj-view-btn">
-                      View Project
+              <div className="proj-body">
+                <div className="proj-cat">
+                  {project.categoryLabel}
+                </div>
+
+                <h3 className="proj-title">
+                  {project.title}
+                </h3>
+
+                <p className="proj-desc">
+                  {project.description}
+                </p>
+
+                <div className="proj-tags">
+                  {project.tags.map((tag) => (
+                    <span className="proj-tag" key={tag}>
+                      {tag}
                     </span>
-                  </div>
-                </a>
-
-                <div className="proj-body">
-                  <div className="proj-cat">
-                    {project.categoryLabel}
-                  </div>
-
-                  <h3 className="proj-title">
-                    {project.title}
-                  </h3>
-
-                  <p className="proj-desc">
-                    {project.description}
-                  </p>
-
-                  <div className="proj-tags">
-                    {project.tags.map((tag) => (
-                      <span
-                        className="proj-tag"
-                        key={tag}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+                  ))}
                 </div>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
-
-        {loading && (
-          <p
-            style={{
-              textAlign: 'center',
-              marginTop: '20px',
-              color: 'var(--slate)',
-            }}
-          >
-            Loading latest projects...
-          </p>
-        )}
-
       </section>
 
       <section
@@ -252,8 +192,10 @@ export default function Projects() {
         <h3
           style={{
             fontFamily: 'var(--font-d)',
+            fontWeight: 700,
             fontSize: '1.6rem',
             color: 'var(--white)',
+            marginBottom: '8px',
           }}
         >
           Want a site like these?
@@ -265,11 +207,11 @@ export default function Projects() {
             marginBottom: '24px',
           }}
         >
-          Tell me about your idea and I’ll provide a free quote within 24 hours.
+          Tell me about your business and I’ll provide a free quote within 24 hours.
         </p>
 
         <Link className="btn btn-primary" to="/contact">
-          Get a Appointment →
+          Get an Appointment →
         </Link>
       </section>
     </div>

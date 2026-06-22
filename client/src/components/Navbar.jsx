@@ -46,7 +46,7 @@ export default function Navbar() {
           {NAV_ITEMS.map((item) => (
             <button key={item.to} onClick={() => closeAndGo(item.to)}>{item.label}</button>
           ))}
-          <button onClick={() => closeAndGo('/contact')} style={{ color: '#60A5FA', fontWeight: 700 }}>Get a Quote →</button>
+          <button onClick={() => closeAndGo('/contact')} style={{ color: '#60A5FA', fontWeight: 700 }}>Get a Appointment →</button>
         </div>
       )}
     </>
