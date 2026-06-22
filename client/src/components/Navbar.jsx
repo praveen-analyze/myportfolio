@@ -34,7 +34,7 @@ export default function Navbar() {
             </NavLink>
           ))}
         </div>
-        <NavLink to="/contact" className="nav-cta">Get a Quote →</NavLink>
+        <NavLink to="/contact" className="nav-cta">Get a Appointment →</NavLink>
         <div className="hamburger" onClick={() => setMenuOpen((o) => !o)}>
           <span style={menuOpen ? { transform: 'rotate(45deg) translate(5px,5px)' } : undefined}></span>
           <span style={menuOpen ? { opacity: 0 } : undefined}></span>
